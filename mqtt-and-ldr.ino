@@ -38,7 +38,6 @@ void reconnect() {
     Serial.print("Attempting mqtt connection....");
     if (client.connect("lampard",brokerUsername, brokerPassword)) {
       Serial.println("Connected");
-      client.publish("topic","0");
       client.subscribe("street_lamp");
     }else{
       Serial.print("failed,");
@@ -135,15 +134,16 @@ void loop() {
   
   // Delay
   unsigned long now = millis();
-  if (now - lastMsg > 2000) {
+  if (now - lastMsg > 5000) {
     lastMsg = now;
     int ldrStatus = analogRead(ldrPin);
     char cstr[16]; // convert to char
     itoa(ldrStatus, cstr, 10); // int to string
     client.publish("topic",cstr); // send to mqtt
     
-    // Logic for turn on lamp
-    if (ldrStatus < 650) {
+     // Logic for turn on lamp
+     // Comment saja jika lampu nggak mau mati
+    if (ldrStatus < 365) {
       pinMode(lamp1, INPUT);
       pinMode(lamp2, INPUT);
       pinMode(lamp3, INPUT);
